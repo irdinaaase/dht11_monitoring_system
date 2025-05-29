@@ -1,0 +1,36 @@
+name: relay_monitoring_system
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.2
+  connectivity_plus: ^5.0.2  # Optional: Check internet connection
+  syncfusion_flutter_charts: ^20.4.54  # Version that works with intl 0.19.0
+  intl: ^0.19.0  # Must match flutter_localizations requirement
+  flutter_localizations:              # For date picker
+    sdk: flutter
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: StarJedi
+      fonts:
+        - asset: assets/fonts/Starjout.ttf
+
+    - family: RussoOne
+      fonts:
+        - asset: assets/fonts/Russo_One.ttf
