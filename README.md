@@ -27,10 +27,31 @@ The ESP32 sends sensor data every 10 seconds to a backend server, which then sto
 ## 🏗️ System Architecture
 
 ```
-[DHT11 Sensor] ──┐
-[OLED Display] ──┤──> [ESP32 Microcontroller] <──> [Relay Module]
-                 │
-                 └──> [Backend API Server] <──> [Flutter Mobile App]
+                     +---------------------+
+                     |     DHT11 Sensor    |
+                     +----------+----------+
+                                |
+                                | (Temp & Humidity)
+                                v
+                          +-----+------+
+                          |   ESP32    |
+                          +-----+------+
+                                | 
+            +-------------------+-----------------+-------+
+            |                   |                 |       ^
+            v                   v                 v       |
+  +----------------+   +----------------+   +------------------+
+  |  OLED Display  |   |     Relay      |   |     Backend      |
+  | (live reading  |   | (Trigger fan/  |   | (API + SQL DB)   |
+  |    view)       |   |  alert system) |   +--------+---------+
+  +----------------+   +----------------+         |       ^
+                                                  |       |
+                                                  v       |
+                                              +--------------+
+                                              |  Flutter App |
+                                              | (Graph View) |
+                                              +--------------+
+
 ```
 
 ---
