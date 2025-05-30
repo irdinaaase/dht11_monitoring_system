@@ -41,220 +41,316 @@
 
   ====================================================================*/
 
-  #include <WiFi.h>
-  #include <HTTPClient.h>
-  #include <DHT.h>
-  #include <Wire.h>
-  #include <Adafruit_GFX.h>
-  #include <Adafruit_SSD1306.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <DHT.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <ArduinoJson.h>
 
-  // Hardware Configuration
-  #define DHTPIN 4          // DHT11 Sensor connected to GPIO4
-  #define DHTTYPE DHT11     // DHT11 sensor type
-  #define RELAYPIN 25       // Relay connected to GPIO25
-  #define SCREEN_WIDTH 128  // OLED display width
-  #define SCREEN_HEIGHT 32 // OLED display height
-  #define OLED_RESET -1     // Reset pin
+// Hardware Configuration
+#define DHTPIN 4          // DHT11 Sensor connected to GPIO4
+#define DHTTYPE DHT11     // DHT11 sensor type
+#define RELAYPIN 25       // Relay connected to GPIO25
+#define SCREEN_WIDTH 128  // OLED display width
+#define SCREEN_HEIGHT 32  // OLED display height
+#define OLED_RESET -1     // Reset pin
 
-  // System Configuration
-  const char* device_id = "001"; // Simple numeric device ID
-  const char* ssid = "Bullet Chicken";
-  const char* password = "vagabond";
-  const char* serverName = "http://humancc.site/irdinabalqis/relay_monitoring_system/insert_data.php";
+// System Configuration
+const char* device_id = "001"; 
+const char* ssid = "Bullet Chicken";
+const char* password = "vagabond";
+const char* dataServer = "http://humancc.site/irdinabalqis/relay_monitoring_system/relay_data/insert_data.php";
+const char* thresholdServer = "http://humancc.site/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php";
 
-  // Threshold Configuration (user-configurable)
-  float tempThreshold = 26.0;    // Default temperature threshold (°C)
-  float humThreshold = 70.0;     // Default humidity threshold (%)
+// Timing Configuration
+const long MAIN_INTERVAL = 10000;        // 10 second main cycle
+const long THRESHOLD_CHECK_INTERVAL = 30000; // 30 seconds for threshold checks
+const long DISPLAY_UPDATE_INTERVAL = 2000;   // 2 seconds per display page
 
-  // Objects
-  DHT dht(DHTPIN, DHTTYPE);
-  Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-  bool alertActive = false;
+// Threshold Configuration
+float tempThreshold = 26.0;    // Default values
+float humThreshold = 70.0;     // Default values
+bool thresholdsUpdated = false;
+bool alertActive = false;
+
+// System Objects
+DHT dht(DHTPIN, DHTTYPE);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// Display Management
+int currentPage = 0;
+unsigned long lastMainCycle = 0;
+unsigned long lastThresholdCheck = 0;
+unsigned long lastPageChange = 0;
+static unsigned long updateTime = 0;  // For tracking threshold updates
+
+void setup() {
+  Serial.begin(115200);
   
-  int currentPage = 0;
-  unsigned long lastPageChange = 0;
-  const int pageDelay = 2000; // 2 seconds per page
+  // Initialize hardware
+  pinMode(RELAYPIN, OUTPUT);
+  digitalWrite(RELAYPIN, LOW);
+  dht.begin();
+  
+  // Initialize OLED
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println("OLED initialization failed!");
+    while(1);
+  }
+  Serial.println("OLED initialized");
+  
+  // Show startup screen
+  displayStartup();
+  
+  // Connect to WiFi
+  connectToWiFi();
+  
+  // Initial threshold check
+  checkThresholdUpdates();
+}
 
-  void setup() {
-    Serial.begin(115200);
-    
-    // Initialize hardware
-    pinMode(RELAYPIN, OUTPUT);
-    digitalWrite(RELAYPIN, LOW);
-    dht.begin();
-    
-    // Initialize OLED
-    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-      Serial.println("OLED init failed - check wiring!");
-      while(1); // Halt if display fails
-    }
-    Serial.println("OLED initialized");
-    
-    // Show startup screen
-    display.clearDisplay();
+void loop() {
+  unsigned long currentMillis = millis();
+  
+  // Main 10-second cycle
+  if (currentMillis - lastMainCycle >= MAIN_INTERVAL) {
+    lastMainCycle = currentMillis;
+    executeMainCycle();
+  }
+  
+  // Check for threshold updates periodically
+  if (currentMillis - lastThresholdCheck >= THRESHOLD_CHECK_INTERVAL) {
+    lastThresholdCheck = currentMillis;
+    checkThresholdUpdates();
+  }
+  
+  // Update display pages
+  updateDisplayManagement();
+}
+
+void displayStartup() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0,0);
+  display.println("System Starting...");
+  display.display();
+  delay(1000);
+  display.clearDisplay();
+  display.display();
+}
+
+void connectToWiFi() {
+  WiFi.begin(ssid, password);
+  display.clearDisplay();
+  display.setCursor(0,0);
+  display.print("Connecting to WiFi");
+  display.display();
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    display.print(".");
+    display.display();
+  }
+  
+  display.clearDisplay();
+  display.setCursor(0,0);
+  display.println("WiFi connected!");
+  display.printf("IP: %s", WiFi.localIP().toString().c_str());
+  display.display();
+  delay(2000);
+}
+
+void executeMainCycle() {
+  // Read sensors
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+  
+  if (isnan(humidity) || isnan(temperature)) {
+    displayError("Sensor Error");
+    return;
+  }
+  
+  // Check thresholds and control relay
+  bool thresholdExceeded = checkThresholds(temperature, humidity);
+  digitalWrite(RELAYPIN, thresholdExceeded ? HIGH : LOW);
+  
+  // Manage alerts
+  manageAlerts(temperature, humidity, thresholdExceeded);
+  
+  // Send data to server if connected
+  if (WiFi.status() == WL_CONNECTED) {
+    sendSensorData(temperature, humidity);
+  }
+  
+  // Log to serial
+  Serial.printf("[%s] Temp: %.1f°C Hum: %.1f%% %s\n", 
+              device_id, temperature, humidity,
+              thresholdExceeded ? "ALERT" : "Normal");
+}
+
+bool checkThresholds(float temp, float hum) {
+  return (temp > tempThreshold || hum > humThreshold);
+}
+
+void manageAlerts(float temp, float hum, bool exceeded) {
+  if (exceeded && !alertActive) {
+    showAlert(temp, hum);
+    alertActive = true;
+  } 
+  else if (!exceeded && alertActive) {
+    clearAlert();
+    alertActive = false;
+  }
+}
+
+void updateDisplayManagement() {
+  unsigned long currentMillis = millis();
+  
+  // Rotate display pages every 2 seconds
+  if (currentMillis - lastPageChange >= DISPLAY_UPDATE_INTERVAL) {
+    currentPage = (currentPage + 1) % 2;
+    lastPageChange = currentMillis;
+    updateDisplayContent();
+  }
+}
+
+void updateDisplayContent() {
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+  bool thresholdExceeded = checkThresholds(temperature, humidity);
+  
+  display.clearDisplay();
+  
+  // Show "UPDATED" indicator if thresholds were recently updated
+  if (thresholdsUpdated && (millis() - updateTime < 5000)) {
     display.setTextSize(1);
-    display.setTextColor(SSD1306_WHITE);
-    display.setCursor(0,0);
-    display.println("System Starting...");
-    display.display();
-    delay(1000);
-
-    display.clearDisplay();
-    display.display();
+    display.setCursor(80, 0);
+    display.print("UPDATED");
+  } else {
+    thresholdsUpdated = false;
+  }
+  
+  // Page 0: Values display
+  if (currentPage == 0) {
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.print("Temp:");
+    display.setCursor(0, 10);
+    display.printf("%.1f/%.1fC", temperature, tempThreshold);
     
-    // Connect to WiFi
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
+    display.setCursor(64, 0);
+    display.print("Hum:");
+    display.setCursor(64, 10);
+    display.printf("%.1f/%.1f%%", humidity, humThreshold);
+  }
+  // Page 1: Status display
+  else {
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    if (thresholdExceeded) {
+      display.print("ALERT: ");
+      display.print(temperature > tempThreshold ? "HIGH TEMP" : "HIGH HUM");
+    } else {
+      display.print("Status: Normal");
     }
-    Serial.println("\nWiFi connected");
-  }
-
-  void loop() {
-      static unsigned long lastSendTime = 0;
-      static float temperature = 0;
-      static float humidity = 0;
-      static bool thresholdExceeded = false;
-      
-      if (millis() - lastSendTime >= 10000) { // 10 second interval
-        lastSendTime = millis();
-        
-        // Read sensors
-        humidity = dht.readHumidity();
-        temperature = dht.readTemperature();
-        
-        if (isnan(humidity) || isnan(temperature)) {
-          Serial.println("Sensor error");
-          return;
-        }
-        
-        // Check thresholds
-        thresholdExceeded = (temperature > tempThreshold || humidity > humThreshold);
-        digitalWrite(RELAYPIN, thresholdExceeded ? HIGH : LOW);
-        
-        // OLED Alert Handling
-        if (thresholdExceeded && !alertActive) {
-          showAlert(temperature, humidity);
-          alertActive = true;
-        } 
-        else if (!thresholdExceeded && alertActive) {
-          clearAlert();
-          alertActive = false;
-        }
-        
-        // Send data to server
-        if (WiFi.status() == WL_CONNECTED) {
-          sendSensorData(temperature, humidity);
-        }
-        
-        // Serial monitor output
-        Serial.printf("[%s] Temp: %.1fC Hum: %.1f%% %s\n", 
-                    device_id, temperature, humidity,
-                    thresholdExceeded ? "ALERT" : "Normal");
-      }
-
-      // Update display with current readings
-      updateDisplay(temperature, humidity, thresholdExceeded);
-  }
-
-  void updateDisplay(float temp, float hum, bool alert) {
-      unsigned long currentTime = millis();
-      
-      // Change page every pageDelay milliseconds
-      if (currentTime - lastPageChange >= pageDelay) {
-          currentPage = (currentPage + 1) % 2; // Switch between 0 and 1
-          lastPageChange = currentTime;
-      }
-      
-      display.clearDisplay();
-      
-      // Page 0: Show temperature and humidity
-      if (currentPage == 0) {
-          display.setTextSize(1); // Reduced text size for 32px height
-          display.setCursor(0, 0);
-          display.print("Temp:");
-          display.setCursor(0, 10);
-          display.printf("%.1f C", temp);
-          
-          display.setCursor(64, 0);
-          display.print("Hum:");
-          display.setCursor(64, 10);
-          display.printf("%.1f %%", hum);
-      }
-      // Page 1: Show status and relay state
-      else {
-          display.setTextSize(1);
-          display.setCursor(0, 0);
-          if (alert) {
-              display.print("ALERT: ");
-              display.print(temp > tempThreshold ? "HIGH TEMP" : "HIGH HUM");
-          } else {
-              display.print("Status: Normal");
-          }
-          
-          display.setCursor(0, 10);
-          display.print("Relay: ");
-          display.print(digitalRead(RELAYPIN) ? "ON" : "OFF");
-          
-          // Add threshold info
-          display.setCursor(0, 20);
-          display.printf("Thresh: T>%.0f H>%.0f", tempThreshold, humThreshold);
-      }
-      
-      display.display();
-  }
-
-  void displayError(const char* message) {
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setCursor(0,0);
-    display.print("ERROR:");
-    display.setTextSize(2);
-    display.setCursor(0,20);
-    display.print(message);
-    display.display();
-  }
-
-  // Function to send sensor data to server
-  void sendSensorData(float temp, float hum) {
-    HTTPClient http;
-    String url = String(serverName) + 
-                "?device_id=" + String(device_id) +
-                "&temp=" + String(temp) +
-                "&hum=" + String(hum) +
-                "&relay_status=" + String(digitalRead(RELAYPIN));
     
-    http.begin(url);
-    int httpCode = http.GET();
-    if (httpCode > 0) {
-      Serial.printf("Server response: %d\n", httpCode);
+    display.setCursor(0, 10);
+    display.print("Relay: ");
+    display.print(digitalRead(RELAYPIN) ? "ON" : "OFF");
+    
+    display.setCursor(0, 20);
+    display.printf("Thresh: T>%.0f H>%.0f", tempThreshold, humThreshold);
+  }
+  
+  display.display();
+}
+
+void checkThresholdUpdates() {
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Cannot check thresholds - WiFi disconnected");
+    return;
+  }
+  
+  HTTPClient http;
+  http.begin(thresholdServer);
+  int httpCode = http.GET();
+  
+  if (httpCode == HTTP_CODE_OK) {
+    String payload = http.getString();
+    DynamicJsonDocument doc(256);
+    DeserializationError error = deserializeJson(doc, payload);
+    
+    if (!error && doc["status"] == "success") {
+      float newTemp = doc["temp_threshold"];
+      float newHum = doc["hum_threshold"];
+      
+      if (newTemp != tempThreshold || newHum != humThreshold) {
+        tempThreshold = newTemp;
+        humThreshold = newHum;
+        thresholdsUpdated = true;
+        updateTime = millis();
+        
+        Serial.printf("Thresholds updated - Temp: %.1f°C, Hum: %.1f%%\n", 
+                     tempThreshold, humThreshold);
+      }
+    } else {
+      Serial.println("Failed to parse threshold data");
     }
-    http.end();
+  } else {
+    Serial.printf("Threshold update failed, HTTP code: %d\n", httpCode);
   }
+  http.end();
+}
 
-  void showAlert(float temp, float hum) {
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setCursor(10, 0);
-      display.print("! ALERT !");
-      
-      display.setCursor(0, 10);
-      if (temp > tempThreshold) {
-          display.printf("Temp: %.1fC", temp);
-      }
-      if (hum > humThreshold) {
-          if (temp > tempThreshold) display.print(" ");
-          display.printf("Hum: %.1f%%", hum);
-      }
-      
-      display.setCursor(0, 20);
-      display.print("Relay: ");
-      display.print(digitalRead(RELAYPIN) ? "ACTIVE" : "OFF");
-      display.display();
+void sendSensorData(float temp, float hum) {
+  HTTPClient http;
+  String url = String(dataServer) + 
+              "?device_id=" + String(device_id) +
+              "&temp=" + String(temp) +
+              "&hum=" + String(hum) +
+              "&relay_status=" + String(digitalRead(RELAYPIN));
+  
+  http.begin(url);
+  int httpCode = http.GET();
+  if (httpCode > 0) {
+    Serial.printf("Data sent - Response: %d\n", httpCode);
   }
+  http.end();
+}
 
-  void clearAlert() {
-    display.clearDisplay();
-    display.display();
+void showAlert(float temp, float hum) {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(10, 0);
+  display.print("! ALERT !");
+  
+  display.setCursor(0, 10);
+  if (temp > tempThreshold) {
+    display.printf("Temp: %.1f > %.1f", temp, tempThreshold);
   }
+  
+  display.setCursor(0, 20);
+  if (hum > humThreshold) {
+    display.printf("Hum: %.1f > %.1f", hum, humThreshold);
+  }
+  
+  display.display();
+}
+
+void clearAlert() {
+  display.clearDisplay();
+  display.display();
+}
+
+void displayError(const char* message) {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0,0);
+  display.print("ERROR:");
+  display.setCursor(0,10);
+  display.print(message);
+  display.display();
+}
