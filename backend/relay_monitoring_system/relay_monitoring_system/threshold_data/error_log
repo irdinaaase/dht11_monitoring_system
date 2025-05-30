@@ -1,0 +1,78 @@
+[29-May-2025 20:02:50 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:02:50 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:02:50 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:02:50 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 5
+[29-May-2025 20:02:50 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php:5
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 5
+[29-May-2025 20:03:12 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:03:12 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:03:12 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:03:12 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:03:12 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php:8
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:04:02 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:04:02 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:04:02 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:04:02 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:04:02 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php:8
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:11:15 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:11:15 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:11:15 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:11:15 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 5
+[29-May-2025 20:11:15 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php:5
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 5
+[29-May-2025 20:12:10 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:12:10 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:12:10 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 2
+[29-May-2025 20:12:10 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:12:10 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php:8
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:25:19 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:25:19 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:25:19 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:25:19 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 5
+[29-May-2025 20:25:19 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php:5
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 5
+[29-May-2025 20:26:34 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:26:34 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:26:34 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:26:34 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 6
+[29-May-2025 20:26:34 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php:6
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 6
+[29-May-2025 20:26:35 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:26:35 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:26:35 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 2
+[29-May-2025 20:26:35 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 6
+[29-May-2025 20:26:35 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php:6
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 6
+[29-May-2025 20:27:33 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 7
+[29-May-2025 20:27:33 UTC] PHP Warning:  include(db_connect.php): Failed to open stream: No such file or directory in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 7
+[29-May-2025 20:27:33 UTC] PHP Warning:  include(): Failed opening 'db_connect.php' for inclusion (include_path='.:/opt/alt/php81/usr/share/pear:/opt/alt/php81/usr/share/php:/usr/share/pear:/usr/share/php') in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 7
+[29-May-2025 20:27:33 UTC] PHP Warning:  Undefined variable $conn in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 11
+[29-May-2025 20:27:33 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php:11
+Stack trace:
+#0 {main}
+  thrown in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/load_threshold.php on line 11
+[29-May-2025 20:28:54 UTC] PHP Warning:  Undefined array key "temp_threshold" in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 7
+[29-May-2025 20:28:54 UTC] PHP Warning:  Undefined array key "hum_threshold" in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:31:19 UTC] PHP Warning:  Undefined array key "temp_threshold" in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 7
+[29-May-2025 20:31:19 UTC] PHP Warning:  Undefined array key "hum_threshold" in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:33:58 UTC] PHP Warning:  Undefined array key "temp_threshold" in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 8
+[29-May-2025 20:33:58 UTC] PHP Warning:  Undefined array key "hum_threshold" in /home4/humancmt/public_html/irdinabalqis/relay_monitoring_system/threshold_data/update_threshold.php on line 9
